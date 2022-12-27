@@ -73,8 +73,6 @@ d3.json(link).then(function (data) {
 		let grades = [0, 100, 200, 300, 400, 500];
 		let labels = [];
 
-        // div.innerHTML += "<h3 style='text-align: center'>Depth</h3>"
-
         for (var i = 0; i < grades.length; i++) {
             labels.push('<i style="background-color:' + color(grades[i] + 1.0) + '"> <span>' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '' : '+') + '</span></i>');
         }
