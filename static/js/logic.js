@@ -12,31 +12,31 @@ var myMap = L.map("map", {
 d3.json(link).then(function (data) {
     console.log(data);
 
-    earthquakesLoc = []
     for (var i = 0; i < data.features.length; i++) {
         let earthquake = data.features[i].geometry.coordinates;
-        earthquakesLoc.push(earthquake);
         let location = [earthquake[1], earthquake[0]];
         let depth = earthquake[2];
         let magnitude = data.features[i].properties.mag
 
         function color(depth) {
-            if (depth > 600) {
+            if (depth > 500) {
                 return "#ea2c2c";
             }
-            if (depth > 300) {
+            if (depth > 400) {
                 return "#ea822c";
             }
-            if (depth > 150) {
+            if (depth > 300) {
                 return "#ee9c00";
             }
-            if (depth > 75) {
+            if (depth > 200) {
                 return "#eecc00";
             }
-            if (depth > 5) {
+            if (depth > 100) {
                 return "#d4ee00";
             }
+            if (depth > 0) {
             return "#98ee00";
+            }
         };
 
         function size(magnitude) {
@@ -61,29 +61,28 @@ d3.json(link).then(function (data) {
             fillOpacity: 0.8,
             radius: size(magnitude),
             weight: 0.5})
-            .bindPopup(`<h1>${data.features[i].properties.place}</h1> <hr> <h3>${new Date(data.features[i].properties.time)}</h3>`)
+            .bindPopup(`<h3>Location: ${data.features[i].properties.place}</h3> <hr> <h3>Magnitude: ${magnitude}</h3> <hr> <h3>Date & Time: ${new Date(data.features[i].properties.time)}</h3>`)
             .addTo(myMap);
-    
+
     };
 
-//     var legend = L.control({position: 'bottomright'});
+    let legend = L.control({position: 'bottomright'});
 
-//     legend.onAdd = function (map) {
+	legend.onAdd = function() {
+	    let div = L.DomUtil.create('div', 'info legend');
+		let grades = [0, 100, 200, 300, 400, 500];
+		let labels = [];
 
-//     var div = L.DomUtil.create('div', 'info legend'),
-//         grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-//         labels = [];
+        // div.innerHTML += "<h3 style='text-align: center'>Depth</h3>"
 
-//     // loop through our density intervals and generate a label with a colored square for each interval
-//     for (var i = 0; i < grades.length; i++) {
-//         div.innerHTML +=
-//             '<i style="background:' + color(grades[i] + 1) + '"></i> ' +
-//             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br><br>' : '+');
-//     }
+        for (var i = 0; i < grades.length; i++) {
+            labels.push('<i style="background-color:' + color(grades[i] + 1.0) + '"> <span>' + grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '' : '+') + '</span></i>');
+        }
+        
+		div.innerHTML = labels.join('<br>');
+		return div;
+    };
 
-//     return div;
-// };
-
-//     legend.addTo(myMap);
-
-}); 
+	legend.addTo(myMap);
+    
+});
